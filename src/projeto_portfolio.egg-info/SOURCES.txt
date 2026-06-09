@@ -1,0 +1,17 @@
+README.md
+pyproject.toml
+src/__init__.py
+src/observability/__init__.py
+src/observability/trace.py
+src/pipeline/cache.py
+src/pipeline/rag.py
+src/pipeline/routing.py
+src/pipeline/tools.py
+src/projeto_portfolio.egg-info/PKG-INFO
+src/projeto_portfolio.egg-info/SOURCES.txt
+src/projeto_portfolio.egg-info/dependency_links.txt
+src/projeto_portfolio.egg-info/requires.txt
+src/projeto_portfolio.egg-info/top_level.txt
+src/ui/__init__.py
+src/ui/streamlit_app.py
+tests/test_smoke.py

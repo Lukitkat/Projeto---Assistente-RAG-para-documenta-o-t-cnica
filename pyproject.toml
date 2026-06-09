@@ -1,0 +1,35 @@
+[project]
+name = "projeto-portfolio"
+version = "0.1.0"
+description = "Assistente RAG para documentação técnica de Python usando Groq + fastembed"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "groq>=0.9",
+    "chromadb>=0.5",
+    "pypdf>=4.0",
+    "langchain-text-splitters>=0.2",
+    "fastembed>=0.3",
+    "pydantic>=2.0",
+    "python-dotenv>=1.0",
+    "streamlit>=1.30",
+    "pandas>=2.0",
+    "numpy>=1.26",
+    "requests>=2.31",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+    "nbval>=0.11",
+    "sentence-transformers>=3.0",  # alternativa ao fastembed; requer VC++ Redistributable
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint.per-file-ignores]
+# Placeholders intencionais para o aluno preencher (TODOs do projeto)
+"src/pipeline/*.py" = ["F821", "F841"]
