@@ -8,7 +8,7 @@ __pycache__/
 .ipynb_checkpoints/
 
 # Dados e cache
-data/chroma/
+# data/chroma/  (Descomentado para o Streamlit Cloud nao precisar indexar os PDFs na inicializacao)
 data/cache/
 *.log
 
