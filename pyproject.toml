@@ -23,7 +23,6 @@ dev = [
     "pytest>=8.0",
     "ruff>=0.6",
     "nbval>=0.11",
-    "sentence-transformers>=3.0",  # alternativa ao fastembed; requer VC++ Redistributable
 ]
 
 [tool.ruff]

@@ -21,7 +21,7 @@ def _build_embed_fn(model_name: str = "BAAI/bge-small-en-v1.5") -> Callable[[str
     # Tentativa 1: fastembed (ONNX, sem PyTorch)
     try:
         from fastembed import TextEmbedding as FastTextEmbedding
-        _model = FastTextEmbedding(model_name=model_name, cache_dir=".cache/fastembed")
+        _model = FastTextEmbedding(model_name=model_name, cache_dir=".cache/fastembed", threads=1)
 
         def embed_fast(text: str) -> np.ndarray:
             vecs = list(_model.embed([text]))
