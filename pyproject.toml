@@ -3,7 +3,7 @@ name = "projeto-portfolio"
 version = "0.1.0"
 description = "Assistente RAG para documentação técnica de Python usando Groq + fastembed"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.10,<4.0"
 dependencies = [
     "groq>=0.9",
     "chromadb>=0.5",
