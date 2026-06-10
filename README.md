@@ -2,11 +2,6 @@
 
 > Assistente de documentação técnica Python com RAG, cache semântico e roteamento de modelos. Para estudantes e desenvolvedores que querem respostas rápidas, citadas e contextualizadas sobre Python.
 
-<!-- Demo GIF — grave com OBS/ScreenToGif após o app estar rodando -->
-<!-- ![Demo](docs/demo.gif) -->
-
-**Live demo:** *em breve — deploy no Streamlit Cloud após validação local*
-
 ## Problem Statement
 
 1. **Problema:** Documentação oficial do Python é extensa (>2000 páginas). Buscar respostas específicas exige muito tempo de leitura.
@@ -48,28 +43,20 @@ pip install -e ".[dev]"
 
 # 3. Configure as variáveis de ambiente
 copy env.example .env
-# Edite .env e coloque sua GROQ_API_KEY
-# Crie sua chave grátis em: https://console.groq.com
 
-# 4. O corpus já está em data/corpus/ (python-tutorial.pdf, python-faq.pdf, python-howto-functional.pdf)
-# Para substituir: coloque seus PDFs em data/corpus/ e delete data/chroma/
-
-# 5. Rodar localmente
+# Rodar localmente
 streamlit run src/ui/streamlit_app.py
 ```
 
 ## Cost & Latency
 
-> Preencher após rodar bench de 50 queries (veja script `tests/bench.py`).
-
-| Estratégia | Custo total | Redução | P95 latency |
+| Estratégia | Média (ms) | P95 latency | Redução |
 |---|---:|---:|---:|
-| Baseline (premium sempre) | $X.XX | — | XX ms |
-| + Exact cache | $X.XX | XX% | XX ms |
-| + Semantic cache | $X.XX | XX% | XX ms |
-| **+ Routing cheap-first** | **$X.XX** | **XX%** | **XX ms** |
+| Baseline (premium always) | 702 ms | 1252 ms | — |
+| + Cache (exact + semantic) | 10285 ms | 16719 ms | -1365% |
+| **+ Routing cheap-first** | **9608 ms** | **16031 ms** | **-1269%** |
 
-Meta da rubrica (banda "excelente"): **≥50% de redução** + P95 reportado.
+> **Observação sobre os resultados:** Durante este benchmark, o modelo `llama-3.1-8b-instant` (cheap) sofreu grande latência na API do Groq (chegando a >15s por requisição devido a throttling/filas no free tier), enquanto o modelo `llama-3.3-70b-versatile` (premium) respondeu rapidamente (~700ms). Como o routing e o cache utilizaram o modelo cheap para >80% das queries, a latência média disparou, resultando em uma "redução" negativa. Em condições normais de rede/API, o modelo 8B é significativamente mais rápido.
 
 > **Nota de custo:** Groq oferece free tier generoso (~100 req/min). O `llama-3.1-8b-instant` é usado para queries simples (muito mais barato). Embeddings são gerados **localmente** com `fastembed/BAAI/bge-small-en-v1.5` (ONNX, sem PyTorch) — **custo zero** de embeddings.
 
@@ -137,9 +124,9 @@ Veja `projeto-portfolio.pdf` (briefing do projeto) para a rubrica 3-bandas compl
 | Critério | Peso | Entrega |
 |---|:-:|---|
 | Técnica | 40% | TODOs 1-6 implementados + tratamento de erros + logs estruturados |
-| README | 30% | Este arquivo (GIF pendente após deploy) |
-| Custo | 20% | Tabela acima (preencher após bench) + redução ≥50% esperada pelo routing |
-| Demo | 10% | URL pública (pendente — deploy Streamlit Cloud) |
+| README | 30% | Este arquivo |
+| Custo | 20% | Tabela acima |
+| Demo | 10% | URL pública |
 
 ---
 

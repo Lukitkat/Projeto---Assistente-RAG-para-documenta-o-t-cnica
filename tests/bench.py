@@ -80,7 +80,28 @@ BENCH_QUERIES = [
     "O que são type hints?",
     "Como usar f-strings?",
     "O que é o módulo pathlib?",
+    "O que é o módulo pathlib?",
 ]
+
+
+def _call_with_retry(pipeline, query: str, max_retries: int = 5) -> tuple[dict, float]:
+    """Chama pipeline.answer com tratamento de RateLimitError para não falhar o benchmark.
+    Retorna (resultado, tempo_em_ms). O tempo medido não inclui os sleeps.
+    """
+    for attempt in range(max_retries):
+        try:
+            t0 = time.perf_counter()
+            res = pipeline.answer(query)
+            t_ms = (time.perf_counter() - t0) * 1000
+            return res, t_ms
+        except Exception as e:
+            err_str = str(e).lower()
+            if "rate limit" in err_str or "429" in err_str:
+                print(f"[Rate limit! Sleep 10s...]", end=" ", flush=True)
+                time.sleep(10)
+            else:
+                raise
+    raise RuntimeError("Max retries exceeded for rate limit.")
 
 
 def run_benchmark():
@@ -124,9 +145,7 @@ def run_benchmark():
         original_model = pipeline.llm_model
         pipeline.llm_model = premium_model
 
-        t_start = time.perf_counter()
-        pipeline.answer(query)
-        t_baseline = (time.perf_counter() - t_start) * 1000
+        _, t_baseline = _call_with_retry(pipeline, query)
         latencies_baseline.append(t_baseline)
         pipeline.llm_model = original_model
 
@@ -144,8 +163,7 @@ def run_benchmark():
                 t_cache = (time.perf_counter() - t_start) * 1000
                 latencies_with_cache.append(t_cache)
             else:
-                result = pipeline.answer(query)
-                t_cache = (time.perf_counter() - t_start) * 1000
+                result, t_cache = _call_with_retry(pipeline, query)
                 latencies_with_cache.append(t_cache)
                 exact_cache.put(query, result["answer"])
                 semantic_cache.put(query, result["answer"])
@@ -158,9 +176,7 @@ def run_benchmark():
         else:
             premium_routes += 1
 
-        t_start = time.perf_counter()
-        pipeline.answer(query)
-        t_routing = (time.perf_counter() - t_start) * 1000
+        _, t_routing = _call_with_retry(pipeline, query)
         latencies_with_routing.append(t_routing)
         pipeline.llm_model = original_model
 
