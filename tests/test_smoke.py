@@ -1,13 +1,3 @@
-"""Smoke tests — rodam apos voce implementar TODOs 1-3 para validar minimo.
-
-Uso: `uv run pytest tests/test_smoke.py -v`
-
-Para destravar este teste, voce precisa de:
-- TODOs 1-3 implementados em src/pipeline/rag.py
-- Corpus em data/corpus/ com pelo menos 1 PDF
-- .env configurado com API key
-"""
-
 from __future__ import annotations
 
 import os
